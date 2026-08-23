@@ -73,6 +73,15 @@ export type AuditLogResponse = {
   recentSystemActions: AuditLogEntry[];
 };
 
+export type AdminPost = {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: { id: string; fullName: string; avatarUrl: string | null } | null;
+  media: { id: string; url: string; type: string }[];
+  _count: { likes: number; comments: number };
+};
+
 export type PendingFounderVerification = {
   id: string;
   profileId: string;
