@@ -30,7 +30,8 @@ export const loginAction = async (_prevState: LoginState, formData: FormData): P
   const data = (await res.json()) as { accessToken: string; refreshToken: string };
   const payload = decodeToken(data.accessToken);
 
-  if (!payload || payload.role.toUpperCase() !== "ADMIN") {
+  const role = payload?.role?.toUpperCase();
+  if (!payload || (role !== "ADMIN" && role !== "SUPER_USER")) {
     return { error: "This account doesn't have admin access." };
   }
 

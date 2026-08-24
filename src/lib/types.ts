@@ -70,6 +70,7 @@ export type AuditLogEntry = {
 export type AuditLogResponse = {
   logSource: string;
   generatedAt: string;
+  meta: { totalItems: number; currentPage: number; totalPages: number };
   recentSystemActions: AuditLogEntry[];
 };
 
@@ -91,4 +92,63 @@ export type PendingFounderVerification = {
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   profile: { id: string; fullName: string; avatarUrl: string; headline: string };
+};
+
+export type AdminAnalytics = {
+  growth: {
+    signupsByDay: { date: string; count: number }[];
+    postsByDay: { date: string; count: number }[];
+  };
+  distribution: {
+    roleBreakdown: { role: string; count: number }[];
+  };
+  verification: {
+    founderVerificationBreakdown: { status: string; count: number }[];
+    identityVerifiedRate: number;
+    identityVerifiedCount: number;
+    totalProfiles: number;
+  };
+  engagement: {
+    likeCount: number;
+    commentCount: number;
+    savedPostCount: number;
+  };
+  funnels: {
+    jobApplications: { status: string; count: number }[];
+    projectApplications: { status: string; count: number }[];
+  };
+  health: {
+    meetingsByStatus: { status: string; count: number }[];
+    eventsByStatus: { status: string; count: number }[];
+  };
+};
+
+export type AdminJob = {
+  id: string;
+  heading: string;
+  startupName: string;
+  role: string;
+  createdAt: string;
+  poster: { id: string; fullName: string } | null;
+  _count: { applications: number };
+};
+
+export type AdminEvent = {
+  id: string;
+  title: string;
+  location: string;
+  status: string;
+  startsAt: string;
+  createdAt: string;
+  host: { id: string; fullName: string } | null;
+  _count: { attendees: number };
+};
+
+export type AdminCommunity = {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  owner: { id: string; fullName: string } | null;
+  _count: { members: number };
 };

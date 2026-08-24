@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ScrollText } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
@@ -15,12 +16,20 @@ const actionLabel = (action: string) =>
     .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
     .join(" ");
 
-export default async function AuditLogsPage() {
-  const log = await apiFetch<AuditLogResponse>("/admin/audit-logs");
+type AuditLogsPageProps = {
+  searchParams: Promise<{ page?: string }>;
+};
+
+export default async function AuditLogsPage({ searchParams }: AuditLogsPageProps) {
+  const params = await searchParams;
+  const page = Number(params.page ?? 1) || 1;
+  const limit = 50;
+
+  const log = await apiFetch<AuditLogResponse>(`/admin/audit-logs?limit=${limit}&page=${page}`);
 
   return (
     <>
-      <PageHeader title="Audit log" description="The last 50 administrative actions taken on the platform." icon={ScrollText} />
+      <PageHeader title="Audit log" description="Every administrative action taken on the platform, newest first." icon={ScrollText} />
 
       <div className="p-8">
         <div className="glass overflow-hidden rounded-2xl">
@@ -48,6 +57,24 @@ export default async function AuditLogsPage() {
           </table>
 
           {log.recentSystemActions.length === 0 ? <p className="p-10 text-center text-sm text-muted">No actions logged yet.</p> : null}
+        </div>
+
+        <div className="mt-4 flex items-center justify-between text-sm text-muted">
+          <span>
+            Page {log.meta.currentPage} of {Math.max(log.meta.totalPages, 1)} · {log.meta.totalItems} total actions
+          </span>
+          <div className="flex gap-2">
+            {page > 1 ? (
+              <Link href={`/audit-logs?page=${page - 1}`} className="rounded-lg border border-border px-3 py-1.5 font-semibold text-text hover:bg-muted-bg">
+                Previous
+              </Link>
+            ) : null}
+            {page < log.meta.totalPages ? (
+              <Link href={`/audit-logs?page=${page + 1}`} className="rounded-lg border border-border px-3 py-1.5 font-semibold text-text hover:bg-muted-bg">
+                Next
+              </Link>
+            ) : null}
+          </div>
         </div>
       </div>
     </>
