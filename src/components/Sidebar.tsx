@@ -7,6 +7,7 @@ import {
   Briefcase,
   Calendar,
   FileText,
+  Flag,
   Globe2,
   KeyRound,
   LayoutDashboard,
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/communities", label: "Communities", Icon: Globe2 },
   { href: "/verifications", label: "Verifications", Icon: ShieldCheck },
   { href: "/posts", label: "Posts", Icon: FileText },
+  { href: "/post-reports", label: "Post reports", Icon: Flag },
   { href: "/audit-logs", label: "Audit log", Icon: ScrollText }
 ] as const;
 

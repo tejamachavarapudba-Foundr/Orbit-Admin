@@ -144,6 +144,22 @@ export type AdminEvent = {
   _count: { attendees: number };
 };
 
+export type AdminPostReport = {
+  id: string;
+  postId: string;
+  reason: string;
+  status: "open" | "dismissed" | "actioned";
+  createdAt: string;
+  reporter: { id: string; fullName: string; avatarUrl: string | null } | null;
+  post: {
+    id: string;
+    content: string;
+    author: { id: string; fullName: string; avatarUrl: string | null } | null;
+    media: { id: string; url: string; type: string }[];
+    _count: { reports: number };
+  };
+};
+
 export type AdminCommunity = {
   id: string;
   name: string;
