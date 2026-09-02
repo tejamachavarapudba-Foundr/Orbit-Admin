@@ -14,6 +14,7 @@ import {
   LogOut,
   ScrollText,
   ShieldCheck,
+  UserPlus,
   Users
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/", label: "Overview", Icon: LayoutDashboard },
   { href: "/analytics", label: "Analytics", Icon: BarChart3 },
   { href: "/users", label: "Users", Icon: Users },
+  { href: "/admin-users", label: "Orbit accounts", Icon: UserPlus },
   { href: "/projects", label: "Startups", Icon: LayoutDashboard },
   { href: "/jobs", label: "Jobs", Icon: Briefcase },
   { href: "/events", label: "Events", Icon: Calendar },

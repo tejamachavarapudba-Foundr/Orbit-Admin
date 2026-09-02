@@ -11,6 +11,7 @@ export type AdminUser = {
   email: string;
   role: string;
   isBanned: boolean;
+  isOrbitOwned?: boolean;
   createdAt: string;
   updatedAt: string;
   profile: AdminProfile | null;
