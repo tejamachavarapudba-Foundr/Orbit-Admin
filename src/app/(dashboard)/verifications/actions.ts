@@ -19,3 +19,11 @@ export const reviewProfessionalVerificationAction = async (profileId: string, st
   });
   revalidatePath("/verifications");
 };
+
+export const reviewIncorporationVerificationAction = async (projectId: string, status: "approved" | "rejected") => {
+  await apiFetch(`/admin/projects/${projectId}/incorporation/review`, {
+    method: "PATCH",
+    body: { status }
+  });
+  revalidatePath("/verifications");
+};

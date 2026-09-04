@@ -1,17 +1,18 @@
-import { Award, CheckCircle2, FileCheck, ShieldCheck, XCircle } from "lucide-react";
+import { Award, Building2, CheckCircle2, FileCheck, ShieldCheck, XCircle } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
-import type { PendingFounderVerification, PendingProfessionalVerification } from "@/lib/types";
+import type { PendingFounderVerification, PendingIncorporationVerification, PendingProfessionalVerification } from "@/lib/types";
 
-import { reviewVerificationAction, reviewProfessionalVerificationAction } from "./actions";
+import { reviewVerificationAction, reviewProfessionalVerificationAction, reviewIncorporationVerificationAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function VerificationsPage() {
-  const [pendingFounders, pendingProfessionals] = await Promise.all([
+  const [pendingFounders, pendingProfessionals, pendingIncorporations] = await Promise.all([
     apiFetch<PendingFounderVerification[]>("/verification/founder/pending"),
-    apiFetch<PendingProfessionalVerification[]>("/verification/professional/pending")
+    apiFetch<PendingProfessionalVerification[]>("/verification/professional/pending"),
+    apiFetch<PendingIncorporationVerification[]>("/admin/projects/incorporation/pending")
   ]);
 
   return (
@@ -154,6 +155,75 @@ export default async function VerificationsPage() {
                       </button>
                     </form>
                     <form action={reviewProfessionalVerificationAction.bind(null, item.profileId, "rejected")}>
+                      <button
+                        type="submit"
+                        className="flex items-center gap-1.5 rounded-lg border border-danger/30 px-4 py-2 text-sm font-bold text-danger transition hover:bg-danger-bg"
+                      >
+                        <XCircle className="h-4 w-4" strokeWidth={2} />
+                        Reject
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-sm font-bold uppercase tracking-wide text-muted">Certificate of Incorporation</h2>
+          {pendingIncorporations.length === 0 ? (
+            <div className="glass rounded-2xl p-10 text-center">
+              <p className="text-sm font-semibold text-text">Nothing to review</p>
+              <p className="mt-1 text-sm text-muted">No pending Certificate of Incorporation submissions right now.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {pendingIncorporations.map((item) => (
+                <div key={item.id} className="glass rounded-2xl p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-indigo-500 font-display text-sm font-bold text-on-primary">
+                        <Building2 className="h-5 w-5" strokeWidth={2} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text">{item.name || "Untitled project"}</div>
+                        <div className="text-xs text-muted">
+                          {item.tagline || "—"} · by {item.owner.fullName || "Unnamed"}
+                        </div>
+                      </div>
+                    </div>
+                    {item.incorporationDocUrl ? (
+                      <a
+                        href={item.incorporationDocUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary-muted"
+                      >
+                        <FileCheck className="h-3.5 w-3.5" strokeWidth={2} />
+                        View certificate
+                      </a>
+                    ) : null}
+                  </div>
+
+                  {item.incorporationReason ? (
+                    <div className="mt-4 rounded-xl bg-muted-bg/70 px-4 py-3 text-sm">
+                      <div className="text-xs text-muted">Reason given (no file uploaded)</div>
+                      <div className="mt-1 text-text">{item.incorporationReason}</div>
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4 flex gap-3">
+                    <form action={reviewIncorporationVerificationAction.bind(null, item.id, "approved")}>
+                      <button
+                        type="submit"
+                        className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-primary to-indigo-500 px-4 py-2 text-sm font-bold text-on-primary shadow-sm shadow-primary/25 transition hover:brightness-105"
+                      >
+                        <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
+                        Approve
+                      </button>
+                    </form>
+                    <form action={reviewIncorporationVerificationAction.bind(null, item.id, "rejected")}>
                       <button
                         type="submit"
                         className="flex items-center gap-1.5 rounded-lg border border-danger/30 px-4 py-2 text-sm font-bold text-danger transition hover:bg-danger-bg"

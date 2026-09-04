@@ -105,6 +105,16 @@ export type PendingProfessionalVerification = {
   profile: { id: string; fullName: string; avatarUrl: string; headline: string };
 };
 
+export type PendingIncorporationVerification = {
+  id: string;
+  name: string;
+  tagline: string;
+  incorporationDocUrl: string;
+  incorporationReason: string;
+  updatedAt: string;
+  owner: { id: string; fullName: string; avatarUrl: string; headline: string };
+};
+
 export type AdminAnalytics = {
   growth: {
     signupsByDay: { date: string; count: number }[];
