@@ -11,3 +11,11 @@ export const reviewVerificationAction = async (profileId: string, status: "appro
   });
   revalidatePath("/verifications");
 };
+
+export const reviewProfessionalVerificationAction = async (profileId: string, status: "approved" | "rejected") => {
+  await apiFetch(`/verification/professional/${profileId}/review`, {
+    method: "PATCH",
+    body: { status }
+  });
+  revalidatePath("/verifications");
+};

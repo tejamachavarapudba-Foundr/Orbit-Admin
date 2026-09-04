@@ -95,6 +95,16 @@ export type PendingFounderVerification = {
   profile: { id: string; fullName: string; avatarUrl: string; headline: string };
 };
 
+export type PendingProfessionalVerification = {
+  profileId: string;
+  experienceLevel: string;
+  experiences: { company: string; designation: string; startDate: string; endDate: string; isCurrent: boolean }[];
+  certifications: { name: string; fileUrl: string }[];
+  verificationStatus: "pending" | "approved" | "rejected" | null;
+  updatedAt: string;
+  profile: { id: string; fullName: string; avatarUrl: string; headline: string };
+};
+
 export type AdminAnalytics = {
   growth: {
     signupsByDay: { date: string; count: number }[];
