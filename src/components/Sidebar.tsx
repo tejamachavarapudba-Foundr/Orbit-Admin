@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Activity,
   BarChart3,
   Briefcase,
   Calendar,
@@ -24,6 +25,7 @@ import { logoutAction } from "@/app/(dashboard)/actions";
 
 const navItems = [
   { href: "/", label: "Overview", Icon: LayoutDashboard },
+  { href: "/system-health", label: "System health", Icon: Activity },
   { href: "/analytics", label: "Analytics", Icon: BarChart3 },
   { href: "/users", label: "Users", Icon: Users },
   { href: "/admin-users", label: "Orbit accounts", Icon: UserPlus },

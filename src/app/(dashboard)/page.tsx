@@ -3,6 +3,7 @@ import { Ban, Briefcase, Database, LayoutDashboard, MessageSquare, Rocket, Trend
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
 import { StatCard } from "@/components/StatCard";
+import { SystemHealthBanner } from "@/components/SystemHealthBanner";
 import type { AdminStats } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,8 @@ export default async function OverviewPage() {
       <PageHeader title="Overview" description="Platform-wide health at a glance." icon={LayoutDashboard} />
 
       <div className="p-8">
+        <SystemHealthBanner />
+
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard label="Total users" value={stats.overview.totalUsers} icon={Users} />
           <StatCard label="Active users" value={stats.overview.activeUsers} tone="success" icon={UserCheck} />

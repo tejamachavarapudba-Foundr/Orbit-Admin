@@ -17,6 +17,24 @@ export type AdminUser = {
   profile: AdminProfile | null;
 };
 
+export type IntegrationCheck = {
+  name: string;
+  status: "healthy" | "degraded" | "unconfigured";
+  detail: string;
+};
+
+export type SystemHealth = {
+  generatedAt: string;
+  integrations: IntegrationCheck[];
+  content: {
+    openPostReports: number;
+    pendingIncorporationVerifications: number;
+  };
+  security: {
+    failedLogins24h: number;
+  };
+};
+
 export type LoginEvent = {
   id: string;
   userId: string | null;
