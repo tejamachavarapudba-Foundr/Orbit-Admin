@@ -12,6 +12,7 @@ import {
   Globe2,
   History,
   KeyRound,
+  ShieldAlert,
   LayoutDashboard,
   LogOut,
   MonitorSmartphone,
@@ -56,7 +57,8 @@ export const Sidebar = ({ email, isSuperUser = false }: SidebarProps) => {
     ? [
         ...navItems,
         { href: "/super-admin", label: "Admin access", Icon: KeyRound },
-        { href: "/security/login-history", label: "Login history", Icon: History }
+        { href: "/security/login-history", label: "Login history", Icon: History },
+        { href: "/security/account-alerts", label: "Account alerts", Icon: ShieldAlert }
       ]
     : navItems;
 

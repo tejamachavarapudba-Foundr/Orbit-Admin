@@ -31,6 +31,20 @@ export type DataPrivacyOverview = {
   deletionBehavior: string;
 };
 
+export type AccountAlertEntry = {
+  id: string;
+  action: string;
+  details: string;
+  ipAddress: string | null;
+  timestamp: string;
+  performedBy: string;
+};
+
+export type AccountAlertsResponse = {
+  alerts: AccountAlertEntry[];
+  meta: { totalItems: number; currentPage: number; totalPages: number };
+};
+
 export type IntegrationCheck = {
   name: string;
   status: "healthy" | "degraded" | "unconfigured";
