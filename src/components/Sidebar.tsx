@@ -7,6 +7,7 @@ import {
   BarChart3,
   Briefcase,
   Calendar,
+  DatabaseZap,
   FileText,
   Flag,
   Globe2,
@@ -58,7 +59,8 @@ export const Sidebar = ({ email, isSuperUser = false }: SidebarProps) => {
         ...navItems,
         { href: "/super-admin", label: "Admin access", Icon: KeyRound },
         { href: "/security/login-history", label: "Login history", Icon: History },
-        { href: "/security/account-alerts", label: "Account alerts", Icon: ShieldAlert }
+        { href: "/security/account-alerts", label: "Account alerts", Icon: ShieldAlert },
+        { href: "/security/direct-changes", label: "DB-level changes", Icon: DatabaseZap }
       ]
     : navItems;
 

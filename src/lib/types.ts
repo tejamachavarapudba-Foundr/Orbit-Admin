@@ -31,6 +31,24 @@ export type DataPrivacyOverview = {
   deletionBehavior: string;
 };
 
+export type DirectRoleChangeEntry = {
+  id: string;
+  userId: string;
+  email: string;
+  oldRole: string;
+  newRole: string;
+  oldIsBanned: boolean;
+  newIsBanned: boolean;
+  dbUser: string | null;
+  clientAddr: string | null;
+  changedAt: string;
+};
+
+export type DirectRoleChangeResponse = {
+  entries: DirectRoleChangeEntry[];
+  meta: { totalItems: number; currentPage: number; totalPages: number };
+};
+
 export type AccountAlertEntry = {
   id: string;
   action: string;
