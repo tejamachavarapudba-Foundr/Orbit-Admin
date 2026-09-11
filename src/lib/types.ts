@@ -17,6 +17,33 @@ export type AdminUser = {
   profile: AdminProfile | null;
 };
 
+export type LoginEvent = {
+  id: string;
+  userId: string | null;
+  email: string;
+  success: boolean;
+  reason: string | null;
+  ipAddress: string | null;
+  userAgent: string | null;
+  createdAt: string;
+};
+
+export type LoginHistoryResponse = {
+  events: LoginEvent[];
+  meta: { totalItems: number; currentPage: number; totalPages: number };
+};
+
+export type AdminSession = {
+  id: string;
+  userId: string;
+  ipAddress: string | null;
+  userAgent: string | null;
+  createdAt: string;
+  lastUsedAt: string;
+  revokedAt: string | null;
+  user: { email: string; role: string };
+};
+
 export type PaginatedResponse<T> = {
   data: T[];
   meta: {
@@ -65,6 +92,8 @@ export type AuditLogEntry = {
   details: string;
   targetId: string | null;
   timestamp: string;
+  ipAddress: string | null;
+  userAgent: string | null;
   performedBy: { userId: string; name: string };
 };
 

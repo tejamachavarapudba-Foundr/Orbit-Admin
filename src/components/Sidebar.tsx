@@ -9,9 +9,11 @@ import {
   FileText,
   Flag,
   Globe2,
+  History,
   KeyRound,
   LayoutDashboard,
   LogOut,
+  MonitorSmartphone,
   ScrollText,
   ShieldCheck,
   UserPlus,
@@ -32,7 +34,11 @@ const navItems = [
   { href: "/verifications", label: "Verifications", Icon: ShieldCheck },
   { href: "/posts", label: "Posts", Icon: FileText },
   { href: "/post-reports", label: "Post reports", Icon: Flag },
-  { href: "/audit-logs", label: "Audit log", Icon: ScrollText }
+  { href: "/audit-logs", label: "Audit log", Icon: ScrollText },
+  // Every admin-tier role can view/revoke sessions (their own, or every
+  // admin's if Super Admin) — the backend scopes what comes back, so this
+  // item stays in the base list rather than the super-user-only append.
+  { href: "/security/sessions", label: "Sessions", Icon: MonitorSmartphone }
 ] as const;
 
 type SidebarProps = {
@@ -42,7 +48,13 @@ type SidebarProps = {
 
 export const Sidebar = ({ email, isSuperUser = false }: SidebarProps) => {
   const pathname = usePathname();
-  const items = isSuperUser ? [...navItems, { href: "/super-admin", label: "Admin access", Icon: KeyRound }] : navItems;
+  const items = isSuperUser
+    ? [
+        ...navItems,
+        { href: "/super-admin", label: "Admin access", Icon: KeyRound },
+        { href: "/security/login-history", label: "Login history", Icon: History }
+      ]
+    : navItems;
 
   return (
     <aside className="glass sticky top-0 flex h-screen w-64 flex-shrink-0 flex-col rounded-none border-y-0 border-l-0">

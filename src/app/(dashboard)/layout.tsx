@@ -2,12 +2,13 @@ import { redirect } from "next/navigation";
 
 import { Sidebar } from "@/components/Sidebar";
 import { getSession } from "@/lib/session";
+import { isAdminTierRole } from "@/lib/roleLabels";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
   const role = session?.role?.toUpperCase();
 
-  if (!session || session.expired || (role !== "ADMIN" && role !== "SUPER_USER")) {
+  if (!session || session.expired || !isAdminTierRole(role)) {
     redirect("/login");
   }
 

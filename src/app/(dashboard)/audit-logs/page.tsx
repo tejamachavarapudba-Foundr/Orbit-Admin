@@ -39,6 +39,7 @@ export default async function AuditLogsPage({ searchParams }: AuditLogsPageProps
                 <th className="px-5 py-3.5">Action</th>
                 <th className="px-5 py-3.5">Details</th>
                 <th className="px-5 py-3.5">By</th>
+                <th className="px-5 py-3.5">IP address</th>
                 <th className="px-5 py-3.5">When</th>
               </tr>
             </thead>
@@ -50,6 +51,7 @@ export default async function AuditLogsPage({ searchParams }: AuditLogsPageProps
                   </td>
                   <td className="max-w-md px-5 py-3.5 text-muted">{entry.details}</td>
                   <td className="px-5 py-3.5 text-muted">{entry.performedBy.name}</td>
+                  <td className="px-5 py-3.5 text-muted">{entry.ipAddress ?? "—"}</td>
                   <td className="whitespace-nowrap px-5 py-3.5 text-muted">{formatDateTime(entry.timestamp)}</td>
                 </tr>
               ))}

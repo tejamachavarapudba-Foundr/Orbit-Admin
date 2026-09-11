@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { decodeToken, setSessionTokens } from "@/lib/session";
+import { isAdminTierRole } from "@/lib/roleLabels";
 
 const BASE_URL = process.env.API_BASE_URL ?? "http://localhost:3000/api";
 
@@ -27,14 +28,17 @@ export const loginAction = async (_prevState: LoginState, formData: FormData): P
     return { error: res.status === 401 ? "Incorrect email or password." : "Couldn't sign in — try again." };
   }
 
-  const data = (await res.json()) as { accessToken: string; refreshToken: string };
+  const data = (await res.json()) as {
+    accessToken: string;
+    refreshToken: string;
+    user?: { mustChangePassword?: boolean };
+  };
   const payload = decodeToken(data.accessToken);
 
-  const role = payload?.role?.toUpperCase();
-  if (!payload || (role !== "ADMIN" && role !== "SUPER_USER")) {
+  if (!payload || !isAdminTierRole(payload.role)) {
     return { error: "This account doesn't have admin access." };
   }
 
   await setSessionTokens(data.accessToken, data.refreshToken);
-  redirect("/");
+  redirect(data.user?.mustChangePassword ? "/change-password" : "/");
 };
