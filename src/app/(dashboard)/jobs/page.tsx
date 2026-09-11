@@ -85,7 +85,8 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
               </div>
               <DeleteButton
                 id={job.id}
-                confirmMessage={`Permanently delete "${job.heading}"? This can't be undone.`}
+                confirmTitle="Delete this job posting?"
+                confirmDescription={`Permanently delete "${job.heading}"? This can't be undone.`}
                 onDelete={deleteJobAction}
               />
             </div>

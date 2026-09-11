@@ -3,10 +3,10 @@ import { FileText, Heart, MessageCircle, Search } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
+import { DeleteButton } from "@/components/DeleteButton";
 import type { AdminPost, PaginatedResponse } from "@/lib/types";
 
 import { deletePostAction } from "./actions";
-import { DeletePostButton } from "./DeletePostButton";
 
 export const dynamic = "force-dynamic";
 
@@ -85,7 +85,20 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                     <span className="truncate font-semibold text-text">{post.author?.fullName ?? "Unknown"}</span>
                     <span className="flex-shrink-0 text-xs text-muted">{formatDate(post.createdAt)}</span>
                   </div>
-                  <DeletePostButton postId={post.id} onDelete={deletePostAction} />
+                  <div className="flex flex-shrink-0 items-center gap-2">
+                    <Link
+                      href={`/posts/${post.id}`}
+                      className="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-text transition hover:bg-muted-bg"
+                    >
+                      View / Edit
+                    </Link>
+                    <DeleteButton
+                      id={post.id}
+                      confirmTitle="Delete this post?"
+                      confirmDescription="This can't be undone."
+                      onDelete={deletePostAction}
+                    />
+                  </div>
                 </div>
 
                 <p className="mt-1.5 line-clamp-2 text-sm text-muted">{post.content || "(no text content)"}</p>

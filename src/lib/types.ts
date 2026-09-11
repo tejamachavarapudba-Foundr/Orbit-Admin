@@ -131,6 +131,28 @@ export type AdminPost = {
   _count: { likes: number; comments: number };
 };
 
+export type PostReportEntry = {
+  id: string;
+  reason: string;
+  status: string;
+  createdAt: string;
+  reporter: { id: string; fullName: string };
+};
+
+export type PostHistoryEntry = {
+  id: string;
+  action: string;
+  details: string;
+  timestamp: string;
+  performedBy: string;
+};
+
+export type PostDetailResponse = {
+  post: AdminPost;
+  reports: PostReportEntry[];
+  history: PostHistoryEntry[];
+};
+
 export type PendingFounderVerification = {
   id: string;
   profileId: string;

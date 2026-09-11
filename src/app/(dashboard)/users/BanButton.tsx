@@ -2,21 +2,17 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
 
+import { toggleBanAction } from "./actions";
 import { ConfirmActionModal } from "@/components/ConfirmActionModal";
 
-type ActionResult = { error: string | null };
-
-type DeleteButtonProps = {
-  id: string;
-  confirmTitle: string;
-  confirmDescription: string;
-  onDelete: (id: string, confirmPassword: string) => Promise<ActionResult>;
-  label?: string;
+type BanButtonProps = {
+  userId: string;
+  email: string;
+  isBanned: boolean;
 };
 
-export const DeleteButton = ({ id, confirmTitle, confirmDescription, onDelete, label = "Delete" }: DeleteButtonProps) => {
+export const BanButton = ({ userId, email, isBanned }: BanButtonProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
@@ -25,7 +21,7 @@ export const DeleteButton = ({ id, confirmTitle, confirmDescription, onDelete, l
   const confirm = (password: string) => {
     setError(null);
     startTransition(async () => {
-      const result = await onDelete(id, password);
+      const result = await toggleBanAction(userId, password);
       if (result.error) {
         setError(result.error);
         return;
@@ -41,18 +37,23 @@ export const DeleteButton = ({ id, confirmTitle, confirmDescription, onDelete, l
         type="button"
         disabled={isPending}
         onClick={() => setOpen(true)}
-        className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-danger/30 px-3 py-1.5 text-xs font-bold text-danger transition hover:bg-danger-bg disabled:opacity-60"
+        className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition disabled:opacity-50 ${
+          isBanned ? "border-border text-text hover:bg-muted-bg" : "border-danger/30 text-danger hover:bg-danger-bg"
+        }`}
       >
-        <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />
-        {isPending ? "Deleting..." : label}
+        {isBanned ? "Unban" : "Ban"}
       </button>
 
       <ConfirmActionModal
         open={open}
-        title={confirmTitle}
-        description={confirmDescription}
-        confirmLabel="Delete permanently"
-        danger
+        title={isBanned ? "Unban this account?" : "Ban this account?"}
+        description={
+          isBanned
+            ? `${email} will be restored to active status.`
+            : `${email} will be banned immediately and signed out of any active session.`
+        }
+        confirmLabel={isBanned ? "Unban account" : "Ban account"}
+        danger={!isBanned}
         isPending={isPending}
         error={error}
         onCancel={() => {

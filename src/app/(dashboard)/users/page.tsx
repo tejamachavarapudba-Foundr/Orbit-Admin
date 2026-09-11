@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
 import type { AdminUser, PaginatedResponse } from "@/lib/types";
 
-import { toggleBanAction } from "./actions";
+import { BanButton } from "./BanButton";
 
 export const dynamic = "force-dynamic";
 
@@ -91,18 +91,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                     )}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <form action={toggleBanAction.bind(null, user.id)}>
-                      <button
-                        type="submit"
-                        className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition ${
-                          user.isBanned
-                            ? "border-border text-text hover:bg-muted-bg"
-                            : "border-danger/30 text-danger hover:bg-danger-bg"
-                        }`}
-                      >
-                        {user.isBanned ? "Unban" : "Ban"}
-                      </button>
-                    </form>
+                    <BanButton userId={user.id} email={user.email} isBanned={user.isBanned} />
                   </td>
                 </tr>
               ))}

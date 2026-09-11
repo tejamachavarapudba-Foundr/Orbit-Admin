@@ -95,7 +95,8 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
               </div>
               <DeleteButton
                 id={event.id}
-                confirmMessage={`Permanently delete "${event.title}"? This can't be undone.`}
+                confirmTitle="Delete this event?"
+                confirmDescription={`Permanently delete "${event.title}"? This can't be undone.`}
                 onDelete={deleteEventAction}
               />
             </div>

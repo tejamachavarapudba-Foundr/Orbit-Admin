@@ -84,7 +84,8 @@ export default async function CommunitiesPage({ searchParams }: CommunitiesPageP
               </div>
               <DeleteButton
                 id={community.id}
-                confirmMessage={`Permanently delete "${community.name}"? This can't be undone.`}
+                confirmTitle="Delete this community?"
+                confirmDescription={`Permanently delete "${community.name}"? This can't be undone.`}
                 onDelete={deleteCommunityAction}
               />
             </div>
