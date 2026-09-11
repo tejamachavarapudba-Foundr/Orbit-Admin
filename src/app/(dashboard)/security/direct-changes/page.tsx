@@ -5,6 +5,8 @@ import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
 import type { DirectRoleChangeResponse } from "@/lib/types";
 
+import { RevertButton } from "./RevertButton";
+
 export const dynamic = "force-dynamic";
 
 const formatDateTime = (value: string) =>
@@ -47,6 +49,7 @@ export default async function DirectChangesPage({ searchParams }: DirectChangesP
                 <th className="px-5 py-3.5">DB role</th>
                 <th className="px-5 py-3.5">Client address</th>
                 <th className="px-5 py-3.5">When</th>
+                <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -70,6 +73,14 @@ export default async function DirectChangesPage({ searchParams }: DirectChangesP
                   <td className="px-5 py-3.5 font-mono text-[11px] text-muted">{entry.dbUser ?? "—"}</td>
                   <td className="px-5 py-3.5 font-mono text-[11px] text-muted">{entry.clientAddr ?? "—"}</td>
                   <td className="whitespace-nowrap px-5 py-3.5 text-muted">{formatDateTime(entry.changedAt)}</td>
+                  <td className="px-5 py-3.5 text-right">
+                    <RevertButton
+                      logEntryId={entry.id}
+                      email={entry.email}
+                      oldRole={entry.oldRole}
+                      oldIsBanned={entry.oldIsBanned}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
