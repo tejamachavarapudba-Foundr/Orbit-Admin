@@ -17,6 +17,20 @@ export type AdminUser = {
   profile: AdminProfile | null;
 };
 
+export type DataPrivacyOverview = {
+  generatedAt: string;
+  counts: {
+    totalUsers: number;
+    phoneNumbersStored: number;
+    connectedGoogleAccountsActive: number;
+    connectedGoogleAccountsRevoked: number;
+    incorporationDocsStored: number;
+  };
+  categories: { category: string; examples: string; purpose: string }[];
+  retention: string;
+  deletionBehavior: string;
+};
+
 export type IntegrationCheck = {
   name: string;
   status: "healthy" | "degraded" | "unconfigured";

@@ -16,6 +16,7 @@ import {
   LogOut,
   MonitorSmartphone,
   ScrollText,
+  Shield,
   ShieldCheck,
   UserPlus,
   Users
@@ -37,6 +38,7 @@ const navItems = [
   { href: "/posts", label: "Posts", Icon: FileText },
   { href: "/post-reports", label: "Post reports", Icon: Flag },
   { href: "/audit-logs", label: "Audit log", Icon: ScrollText },
+  { href: "/data-privacy", label: "Data & privacy", Icon: Shield },
   // Every admin-tier role can view/revoke sessions (their own, or every
   // admin's if Super Admin) — the backend scopes what comes back, so this
   // item stays in the base list rather than the super-user-only append.
