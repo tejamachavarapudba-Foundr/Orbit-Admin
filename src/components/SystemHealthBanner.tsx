@@ -13,8 +13,10 @@ const dotFor = (status: "ok" | "warn" | "bad") =>
     <XCircle className="h-4 w-4 flex-shrink-0 text-danger" strokeWidth={2} />
   );
 
-// Compact "is anything on fire" strip for the top of Overview — the
-// dedicated /system-health page has the full per-integration breakdown.
+// Compact "is anything on fire" strip for the top of Overview, scoped to
+// DB + infra/integrations only — the dedicated /system-health page has the
+// full per-integration breakdown. Content/security signals (post reports,
+// failed logins) live in their own sections, not duplicated here.
 // Fetches independently (not passed stats as a prop) so it stays accurate
 // even if this ends up reused somewhere Overview's own stats aren't loaded.
 export const SystemHealthBanner = async () => {
@@ -38,16 +40,8 @@ export const SystemHealthBanner = async () => {
       label:
         degraded.length + unconfigured.length === 0
           ? "Integrations — Healthy"
-          : `Integrations — ${degraded.length + unconfigured.length} need attention`,
+          : `Integrations — ${health.summary.affected.join(", ")} need attention`,
       status: degraded.length > 0 ? "bad" : unconfigured.length > 0 ? "warn" : "ok"
-    },
-    {
-      label: health.content.openPostReports > 0 ? `${health.content.openPostReports} post reports need attention` : "Content — No open reports",
-      status: health.content.openPostReports > 0 ? "warn" : "ok"
-    },
-    {
-      label: health.security.failedLogins24h > 3 ? `${health.security.failedLogins24h} failed logins (24h)` : "Security — No critical issues",
-      status: health.security.failedLogins24h > 3 ? "warn" : "ok"
     }
   ];
 

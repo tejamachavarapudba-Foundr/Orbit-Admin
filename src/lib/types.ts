@@ -72,12 +72,10 @@ export type IntegrationCheck = {
 export type SystemHealth = {
   generatedAt: string;
   integrations: IntegrationCheck[];
-  content: {
-    openPostReports: number;
-    pendingIncorporationVerifications: number;
-  };
-  security: {
-    failedLogins24h: number;
+  summary: {
+    healthyCount: number;
+    totalCount: number;
+    affected: string[];
   };
 };
 
