@@ -95,6 +95,27 @@ export type LoginHistoryResponse = {
   meta: { totalItems: number; currentPage: number; totalPages: number };
 };
 
+export type UserEngagementSummaryItem = {
+  userId: string;
+  email: string;
+  fullName: string;
+  loginCount: number;
+  engagedMinutes: number;
+  lastLoginAt: string;
+};
+
+export type UserEngagementSummaryResponse = {
+  items: UserEngagementSummaryItem[];
+  meta: { totalItems: number; currentPage: number; totalPages: number };
+};
+
+export type UserEngagementDailyItem = {
+  date: string;
+  loginCount: number;
+  firstLoginAt: string | null;
+  engagedMinutes: number;
+};
+
 export type AdminSession = {
   id: string;
   userId: string;

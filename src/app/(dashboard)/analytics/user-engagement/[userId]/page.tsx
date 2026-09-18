@@ -1,0 +1,81 @@
+import Link from "next/link";
+import { ArrowLeft, CalendarClock } from "lucide-react";
+
+import { apiFetch } from "@/lib/api";
+import { PageHeader } from "@/components/PageHeader";
+import type { UserEngagementDailyItem } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
+
+const formatDay = (value: string) =>
+  new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date(`${value}T00:00:00Z`));
+
+const formatTime = (value: string | null) =>
+  value ? new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(value)) : "—";
+
+const formatMinutes = (minutes: number) => {
+  if (minutes === 0) return "—";
+  if (minutes < 1) return "< 1m";
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hours === 0) return `${mins}m`;
+  if (mins === 0) return `${hours}h`;
+  return `${hours}h ${mins}m`;
+};
+
+const todayKey = () => new Date().toISOString().slice(0, 10);
+const daysAgoKey = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+type UserEngagementDailyPageProps = {
+  params: Promise<{ userId: string }>;
+  searchParams: Promise<{ from?: string; to?: string }>;
+};
+
+export default async function UserEngagementDailyPage({ params, searchParams }: UserEngagementDailyPageProps) {
+  const { userId } = await params;
+  const query = await searchParams;
+  const from = query.from ?? daysAgoKey(6);
+  const to = query.to ?? todayKey();
+
+  const days = await apiFetch<UserEngagementDailyItem[]>(`/admin/analytics/engagement-daily/${userId}?from=${from}&to=${to}`);
+
+  return (
+    <>
+      <PageHeader title="Day-wise activity" description={`Login count and time spent per day, ${from} to ${to}.`} icon={CalendarClock} />
+
+      <div className="p-8">
+        <Link
+          href={`/analytics/user-engagement?from=${from}&to=${to}`}
+          className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to all users
+        </Link>
+
+        <div className="glass overflow-hidden rounded-2xl">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-border/60 text-xs font-semibold uppercase tracking-wide text-muted">
+                <th className="px-5 py-3.5">Day</th>
+                <th className="px-5 py-3.5">Logins</th>
+                <th className="px-5 py-3.5">First login</th>
+                <th className="px-5 py-3.5">Engaged time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {days.map((day) => (
+                <tr key={day.date} className="border-b border-border/60 align-top transition last:border-0 hover:bg-white/30">
+                  <td className="px-5 py-3.5 text-text">{formatDay(day.date)}</td>
+                  <td className="px-5 py-3.5 text-text">{day.loginCount}</td>
+                  <td className="px-5 py-3.5 text-muted">{formatTime(day.firstLoginAt)}</td>
+                  <td className="px-5 py-3.5 text-text">{formatMinutes(day.engagedMinutes)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {days.length === 0 ? <p className="p-10 text-center text-sm text-muted">No data for this range.</p> : null}
+        </div>
+      </div>
+    </>
+  );
+}
