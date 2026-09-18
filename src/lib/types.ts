@@ -99,9 +99,9 @@ export type UserEngagementSummaryItem = {
   userId: string;
   email: string;
   fullName: string;
-  loginCount: number;
-  engagedMinutes: number;
-  lastLoginAt: string;
+  sessionCount: number;
+  engagedSeconds: number;
+  lastActiveAt: string;
 };
 
 export type UserEngagementSummaryResponse = {
@@ -111,9 +111,9 @@ export type UserEngagementSummaryResponse = {
 
 export type UserEngagementDailyItem = {
   date: string;
-  loginCount: number;
-  firstLoginAt: string | null;
-  engagedMinutes: number;
+  sessionCount: number;
+  firstActiveAt: string | null;
+  engagedSeconds: number;
 };
 
 export type AdminSession = {

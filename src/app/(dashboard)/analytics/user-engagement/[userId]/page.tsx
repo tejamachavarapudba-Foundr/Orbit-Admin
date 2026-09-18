@@ -13,14 +13,18 @@ const formatDay = (value: string) =>
 const formatTime = (value: string | null) =>
   value ? new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(value)) : "—";
 
-const formatMinutes = (minutes: number) => {
-  if (minutes === 0) return "—";
-  if (minutes < 1) return "< 1m";
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  if (hours === 0) return `${mins}m`;
-  if (mins === 0) return `${hours}h`;
-  return `${hours}h ${mins}m`;
+// Down to the second — a real 40-second visit is meaningful data here, not
+// noise to round away.
+const formatDuration = (totalSeconds: number) => {
+  if (totalSeconds === 0) return "—";
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  const parts: string[] = [];
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  if (hours === 0 && seconds > 0) parts.push(`${seconds}s`);
+  return parts.join(" ") || "—";
 };
 
 const todayKey = () => new Date().toISOString().slice(0, 10);
@@ -41,7 +45,7 @@ export default async function UserEngagementDailyPage({ params, searchParams }: 
 
   return (
     <>
-      <PageHeader title="Day-wise activity" description={`Login count and time spent per day, ${from} to ${to}.`} icon={CalendarClock} />
+      <PageHeader title="Day-wise activity" description={`Session count and time spent per day, ${from} to ${to}.`} icon={CalendarClock} />
 
       <div className="p-8">
         <Link
@@ -56,8 +60,8 @@ export default async function UserEngagementDailyPage({ params, searchParams }: 
             <thead>
               <tr className="border-b border-border/60 text-xs font-semibold uppercase tracking-wide text-muted">
                 <th className="px-5 py-3.5">Day</th>
-                <th className="px-5 py-3.5">Logins</th>
-                <th className="px-5 py-3.5">First login</th>
+                <th className="px-5 py-3.5">Sessions</th>
+                <th className="px-5 py-3.5">First active</th>
                 <th className="px-5 py-3.5">Engaged time</th>
               </tr>
             </thead>
@@ -65,9 +69,9 @@ export default async function UserEngagementDailyPage({ params, searchParams }: 
               {days.map((day) => (
                 <tr key={day.date} className="border-b border-border/60 align-top transition last:border-0 hover:bg-white/30">
                   <td className="px-5 py-3.5 text-text">{formatDay(day.date)}</td>
-                  <td className="px-5 py-3.5 text-text">{day.loginCount}</td>
-                  <td className="px-5 py-3.5 text-muted">{formatTime(day.firstLoginAt)}</td>
-                  <td className="px-5 py-3.5 text-text">{formatMinutes(day.engagedMinutes)}</td>
+                  <td className="px-5 py-3.5 text-text">{day.sessionCount}</td>
+                  <td className="px-5 py-3.5 text-muted">{formatTime(day.firstActiveAt)}</td>
+                  <td className="px-5 py-3.5 text-text">{formatDuration(day.engagedSeconds)}</td>
                 </tr>
               ))}
             </tbody>

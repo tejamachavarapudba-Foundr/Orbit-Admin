@@ -10,13 +10,19 @@ export const dynamic = "force-dynamic";
 const formatDateTime = (value: string) =>
   new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
 
-const formatMinutes = (minutes: number) => {
-  if (minutes < 1) return "< 1m";
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  if (hours === 0) return `${mins}m`;
-  if (mins === 0) return `${hours}h`;
-  return `${hours}h ${mins}m`;
+// Down to the second -- a real 40-second visit is meaningful data (this
+// report exists to feed future R&D, not just a glanceable dashboard
+// number), so it shows as "40s", never rounds away to "0m".
+const formatDuration = (totalSeconds: number) => {
+  if (totalSeconds < 1) return "0s";
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  const parts: string[] = [];
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  if (hours === 0 && seconds > 0) parts.push(`${seconds}s`);
+  return parts.join(" ") || "0s";
 };
 
 const todayKey = () => new Date().toISOString().slice(0, 10);
@@ -41,7 +47,7 @@ export default async function UserEngagementPage({ searchParams }: UserEngagemen
     <>
       <PageHeader
         title="User engagement"
-        description="Day-wise login activity and time spent per user, for a chosen date range."
+        description="Day-wise activity and time spent per user, for a chosen date range."
         icon={Clock}
       />
 
@@ -77,9 +83,9 @@ export default async function UserEngagementPage({ searchParams }: UserEngagemen
             <thead>
               <tr className="border-b border-border/60 text-xs font-semibold uppercase tracking-wide text-muted">
                 <th className="px-5 py-3.5">User</th>
-                <th className="px-5 py-3.5">Logins in range</th>
+                <th className="px-5 py-3.5">Sessions in range</th>
                 <th className="px-5 py-3.5">Engaged time</th>
-                <th className="px-5 py-3.5">Last login</th>
+                <th className="px-5 py-3.5">Last active</th>
                 <th className="px-5 py-3.5" />
               </tr>
             </thead>
@@ -90,9 +96,9 @@ export default async function UserEngagementPage({ searchParams }: UserEngagemen
                     <div className="font-semibold text-text">{item.fullName}</div>
                     <div className="text-xs text-muted">{item.email}</div>
                   </td>
-                  <td className="px-5 py-3.5 text-text">{item.loginCount}</td>
-                  <td className="px-5 py-3.5 text-text">{formatMinutes(item.engagedMinutes)}</td>
-                  <td className="whitespace-nowrap px-5 py-3.5 text-muted">{formatDateTime(item.lastLoginAt)}</td>
+                  <td className="px-5 py-3.5 text-text">{item.sessionCount}</td>
+                  <td className="px-5 py-3.5 text-text">{formatDuration(item.engagedSeconds)}</td>
+                  <td className="whitespace-nowrap px-5 py-3.5 text-muted">{formatDateTime(item.lastActiveAt)}</td>
                   <td className="px-5 py-3.5">
                     <Link
                       href={`/analytics/user-engagement/${item.userId}?from=${from}&to=${to}`}
@@ -107,7 +113,7 @@ export default async function UserEngagementPage({ searchParams }: UserEngagemen
           </table>
 
           {summary.items.length === 0 ? (
-            <p className="p-10 text-center text-sm text-muted">No logins recorded in this range.</p>
+            <p className="p-10 text-center text-sm text-muted">No activity recorded in this range.</p>
           ) : null}
         </div>
 
