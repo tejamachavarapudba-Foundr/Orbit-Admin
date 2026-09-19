@@ -116,6 +116,22 @@ export type UserEngagementDailyItem = {
   engagedSeconds: number;
 };
 
+export type DailySignupUser = {
+  userId: string;
+  email: string;
+  fullName: string;
+  role: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  createdAt: string;
+};
+
+export type DailySignupItem = {
+  date: string;
+  count: number;
+  users: DailySignupUser[];
+};
+
 export type AdminSession = {
   id: string;
   userId: string;

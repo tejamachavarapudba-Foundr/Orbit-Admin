@@ -3,8 +3,8 @@ import { Clock } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
-import { formatDateTime } from "@/lib/formatDate";
-import type { UserEngagementSummaryResponse } from "@/lib/types";
+import { formatDateTime, formatDayLabel, formatTime } from "@/lib/formatDate";
+import type { DailySignupItem, UserEngagementSummaryResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -37,9 +37,11 @@ export default async function UserEngagementPage({ searchParams }: UserEngagemen
   const page = Number(params.page ?? 1) || 1;
   const limit = 50;
 
-  const summary = await apiFetch<UserEngagementSummaryResponse>(
-    `/admin/analytics/engagement-summary?from=${from}&to=${to}&page=${page}&limit=${limit}`
-  );
+  const [summary, dailySignups] = await Promise.all([
+    apiFetch<UserEngagementSummaryResponse>(`/admin/analytics/engagement-summary?from=${from}&to=${to}&page=${page}&limit=${limit}`),
+    apiFetch<DailySignupItem[]>(`/admin/analytics/daily-signups?from=${from}&to=${to}`)
+  ]);
+  const totalSignups = dailySignups.reduce((sum, day) => sum + day.count, 0);
 
   return (
     <>
@@ -75,6 +77,54 @@ export default async function UserEngagementPage({ searchParams }: UserEngagemen
             Apply range
           </button>
         </form>
+
+        <div className="glass mb-6 overflow-hidden rounded-2xl">
+          <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+            <h2 className="text-sm font-semibold text-text">Daily sign-ups</h2>
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted">{totalSignups} new in range</span>
+          </div>
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-border/60 text-xs font-semibold uppercase tracking-wide text-muted">
+                <th className="px-5 py-3.5">Date</th>
+                <th className="px-5 py-3.5">New sign-ups</th>
+                <th className="px-5 py-3.5" />
+              </tr>
+            </thead>
+            <tbody>
+              {dailySignups.map((day) => (
+                <tr key={day.date} className="border-b border-border/60 align-top last:border-0">
+                  <td className="whitespace-nowrap px-5 py-3.5 font-semibold text-text">{formatDayLabel(day.date)}</td>
+                  <td className="px-5 py-3.5 text-text">{day.count}</td>
+                  <td className="px-5 py-3.5">
+                    {day.count > 0 ? (
+                      <details>
+                        <summary className="cursor-pointer font-semibold text-primary hover:underline">View sign-ups</summary>
+                        <ul className="mt-3 space-y-2">
+                          {day.users.map((user) => (
+                            <li key={user.userId} className="rounded-lg border border-border/60 bg-surface px-3 py-2 text-xs">
+                              <div className="font-semibold text-text">{user.fullName}</div>
+                              <div className="text-muted">{user.email}</div>
+                              <div className="mt-1 flex flex-wrap items-center gap-2 text-muted">
+                                <span>{formatTime(user.createdAt)}</span>
+                                <span>·</span>
+                                <span className="uppercase">{user.role}</span>
+                                <span>·</span>
+                                <span>{user.emailVerified ? "Email verified" : "Email unverified"}</span>
+                                <span>·</span>
+                                <span>{user.phoneVerified ? "Phone verified" : "Phone unverified"}</span>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ) : null}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className="glass overflow-hidden rounded-2xl">
           <table className="w-full text-left text-sm">
