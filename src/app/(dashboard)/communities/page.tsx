@@ -4,14 +4,12 @@ import { Globe2, Search, Users } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
 import { DeleteButton } from "@/components/DeleteButton";
+import { formatDate } from "@/lib/formatDate";
 import type { AdminCommunity, PaginatedResponse } from "@/lib/types";
 
 import { deleteCommunityAction } from "./actions";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value));
 
 type CommunitiesPageProps = {
   searchParams: Promise<{ page?: string; search?: string }>;

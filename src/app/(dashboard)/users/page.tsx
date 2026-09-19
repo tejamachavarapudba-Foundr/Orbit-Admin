@@ -3,14 +3,12 @@ import { Search, Users as UsersIcon } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
+import { formatDate } from "@/lib/formatDate";
 import type { AdminUser, PaginatedResponse } from "@/lib/types";
 
 import { BanButton } from "./BanButton";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value));
 
 type UsersPageProps = {
   searchParams: Promise<{ page?: string; search?: string }>;

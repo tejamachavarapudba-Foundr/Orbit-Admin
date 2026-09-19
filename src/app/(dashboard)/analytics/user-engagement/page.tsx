@@ -3,12 +3,10 @@ import { Clock } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
+import { formatDateTime } from "@/lib/formatDate";
 import type { UserEngagementSummaryResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
-
-const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
 
 // Down to the second -- a real 40-second visit is meaningful data (this
 // report exists to feed future R&D, not just a glanceable dashboard

@@ -3,15 +3,14 @@ import { ArrowLeft, CalendarClock } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
+import { formatDayLabel, formatTime as formatTimeIst } from "@/lib/formatDate";
 import type { UserEngagementDailyItem } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-const formatDay = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date(`${value}T00:00:00Z`));
+const formatDay = formatDayLabel;
 
-const formatTime = (value: string | null) =>
-  value ? new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(value)) : "—";
+const formatTime = (value: string | null) => (value ? formatTimeIst(value) : "—");
 
 // Down to the second — a real 40-second visit is meaningful data here, not
 // noise to round away.

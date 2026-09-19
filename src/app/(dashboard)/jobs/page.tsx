@@ -4,14 +4,12 @@ import { Briefcase, Search, Users } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
 import { DeleteButton } from "@/components/DeleteButton";
+import { formatDate } from "@/lib/formatDate";
 import type { AdminJob, PaginatedResponse } from "@/lib/types";
 
 import { deleteJobAction } from "./actions";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value));
 
 type JobsPageProps = {
   searchParams: Promise<{ page?: string; search?: string }>;

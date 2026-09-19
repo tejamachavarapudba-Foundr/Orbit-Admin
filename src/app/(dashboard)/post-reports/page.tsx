@@ -3,16 +3,12 @@ import { Flag } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
+import { formatDateTimeWithYear as formatDate } from "@/lib/formatDate";
 import type { AdminPostReport, PaginatedResponse } from "@/lib/types";
 
 import { ReportActions } from "./ReportActions";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }).format(
-    new Date(value)
-  );
 
 const statuses = [
   { key: "open", label: "Open" },

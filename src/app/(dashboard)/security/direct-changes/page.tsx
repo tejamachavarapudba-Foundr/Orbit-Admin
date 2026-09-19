@@ -3,14 +3,12 @@ import { DatabaseZap } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
+import { formatDateTime } from "@/lib/formatDate";
 import type { DirectRoleChangeResponse } from "@/lib/types";
 
 import { RevertButton } from "./RevertButton";
 
 export const dynamic = "force-dynamic";
-
-const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
 
 type DirectChangesPageProps = {
   searchParams: Promise<{ page?: string }>;
